@@ -1,10 +1,12 @@
 import Koa from 'koa'
 import { Nuxt, Builder } from 'nuxt'
+import router from './routes/index.js'
 
 async function start () {
   const app = new Koa()
   const host = process.env.HOST || '127.0.0.1'
   const port = process.env.PORT || 3000
+ 
 
   // Import and Set Nuxt.js options
   const config = require('../nuxt.config.js')
@@ -19,11 +21,13 @@ async function start () {
     await builder.build()
   }
 
-  app.use(ctx => {
-    ctx.status = 200
-    ctx.respond = false // Mark request as handled for Koa
-    ctx.req.ctx = ctx // This might be useful later on, e.g. in nuxtServerInit or with nuxt-stash
-    nuxt.render(ctx.req, ctx.res)
+  app
+  .use(router.routes(), router.allowedMethods())
+  .use(ctx => {
+      ctx.status = 200
+      ctx.respond = false // Mark request as handled for Koa
+      ctx.req.ctx = ctx // This might be useful later on, e.g. in nuxtServerInit or with nuxt-stash
+      nuxt.render(ctx.req, ctx.res)
   })
 
   app.listen(port, host)

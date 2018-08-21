@@ -16,27 +16,44 @@ module.exports = {
   /*
   ** Global CSS
   */
-  css: ['~assets/css/main.css'],
+  css: ['~assets/css/main.css','element-ui/lib/theme-chalk/index.css'],
   /*
   ** Customize the progress-bar color
   */
   loading: { color: '#3B8070' },
+  plugins:['~/plugins/element-ui','~/plugins/axios'],
+  modules:['@nuxtjs/axios'],
+  loader:[
+    {
+        test:/\.less$/,
+        loaders:'style-loader!css-loader!less-loader'
+    }
+ ],
   /*
    ** Build configuration
    */
   build: {
+    vendor:['axios'],
+    babel:{
+        "plugins":[
+            ['component',{
+                "libraryName":"element-ui",
+                "styleLibraryName":"theme-chalk"
+            }]
+        ]
+    },
     /*
      ** Run ESLINT on save
      */
-    extend (config, ctx) {
-      if (ctx.isClient) {
-        config.module.rules.push({
-          enforce: 'pre',
-          test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
-          exclude: /(node_modules)/
-        })
-      }
-    }
+    // extend (config, ctx) {
+    //   if (ctx.isClient) {
+    //     config.module.rules.push({
+    //       enforce: 'pre',
+    //       test: /\.(js|vue)$/,
+    //       loader: 'eslint-loader',
+    //       exclude: /(node_modules)/
+    //     })
+    //   }
+    // }
   }
 }
